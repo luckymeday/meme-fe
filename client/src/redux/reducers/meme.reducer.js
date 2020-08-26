@@ -19,18 +19,29 @@ const memeReducer = (state = initialState, action) => {
         loading: false,
       };
     case types.GET_MEMES_FAILURE:
-      console.log(payload);
       return { ...state, loading: false };
     case types.SET_SELECTED_MEME:
       return { ...state, selectedMeme: payload };
-    case types.CREATE_MEME_REQUEST:
-      return { ...state, loading: true };
-    case types.CREATE_MEME_SUCCESS:
+    case types.SET_SELECTED_MEME_FROM_GALLERY:
       return {
         ...state,
-        selectedMeme: { ...state.selectedMeme, ...payload },
+        selectedMeme: {
+          ...state.selectedMeme,
+          ...payload,
+          localImageUrl: `${process.env.REACT_APP_BACKEND_API}${
+            payload.originalImagePath.split("public/")[1]
+            }?${payload.createdAt}`,
+        },
         loading: false,
       };
+    case types.CREATE_MEME_REQUEST:
+      return { ...state, loading: true };
+    // case types.CREATE_MEME_SUCCESS:
+    //   return {
+    //     ...state,
+    //     selectedMeme: { ...state.selectedMeme, ...payload },
+    //     loading: false,
+    //   };
     case types.CREATE_MEME_FAILURE:
       return { ...state, loading: false };
     case types.UPDATE_MEME_REQUEST:

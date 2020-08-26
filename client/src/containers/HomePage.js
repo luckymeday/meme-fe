@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { Container, Button, ButtonGroup } from 'react-bootstrap';
 import { memeActions } from '../redux/actions'
@@ -6,7 +6,7 @@ import { memeActions } from '../redux/actions'
 const HomePage = () => {
   const inputFile = useRef(null);
   const dispatch = useDispatch();
-  const selectedMeme = useSelector((state) => state.meme.selectedMeme);
+  let selectedMeme = useSelector((state) => state.meme.selectedMeme);
   const loading = useSelector((state) => state.meme.loading);
   // const memeActions = useSelector((state) => state.meme.memeActions)
 
@@ -27,6 +27,19 @@ const HomePage = () => {
   const handleCancel = (params) => {
     dispatch(memeActions.setSelectedMeme(null));
   };
+
+  const getImageLocal = () => {
+    console.log('*--- getImageLocal ---*')
+    let myStorage = window.localStorage;
+    if (myStorage.getItem('selectedMeme') !== null) {
+      selectedMeme = JSON.parse(myStorage.getItem('selectedMeme'))
+      dispatch(memeActions.setSelectedMemeFromGallery(selectedMeme));
+    }
+  }
+
+  useEffect(() => {
+    getImageLocal()
+  }, [])
 
   return (
     <Container className="fill d-flex justify-content-center align-items-center">

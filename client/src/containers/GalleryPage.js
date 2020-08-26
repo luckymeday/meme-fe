@@ -5,6 +5,7 @@ import PaginationMeme from "../components/PaginationMeme";
 import MemeList from "../components/MemeList";
 import { memeActions } from "../redux/actions";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useHistory } from "react-router-dom";
 
 const GalleryPage = () => {
     // const memes = [
@@ -21,14 +22,20 @@ const GalleryPage = () => {
     const loading = useSelector((state) => state.meme.loading);
     const totalPageNum = useSelector((state) => state.meme.totalPageNum);
     const memes = useSelector((state) => state.meme.memes);
+    const history = useHistory();
 
     useEffect(() => {
         dispatch(memeActions.memesRequest(pageNum));
     }, [dispatch, pageNum]);
 
-    const showDetail = () => {
+    const showDetail = (meme) => {
         if (loading === true)
             return <ClipLoader color="#f86c6b" size={150} loading={loading} />
+        else {
+            dispatch(memeActions.setSelectedMemeFromGallery(meme));
+            history.push('/')
+        }
+
     }
 
     return (
